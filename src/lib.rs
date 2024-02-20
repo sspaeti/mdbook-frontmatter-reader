@@ -27,17 +27,55 @@ impl Preprocessor for FrontMatterPreprocessor {
         let matter = Matter::<YAML>::new();
 
         book.for_each_mut(|item: &mut BookItem| {
+
+
+
             if let BookItem::Chapter(ref mut chapter) = item {
+                if chapter.name == "Introduction to the Field of Data Engineering"{
+
                 let parsed = matter.parse(&chapter.content);
-                // Optionally deserialize into a struct, if required
+                // eprintln!("DEBUG: Parsed frontmatter: {:?}, {:?}", parsed.data, &chapter.name);
+                // eprintln!("DEBUG: Parsed frontmatter: {:?}", &chapter);
+
+                let base_url = "https://www.dedp.online";
+
                 if let Some(data) = parsed.data {
                     if let Ok(front_matter) = data.deserialize::<FrontMatter>() {
-                        // Example: Print or use the front matter as needed
-                        println!("Title: {}", front_matter.title);
-                        println!("Tags: {:?}", front_matter.tags);
+                        // eprintln!("title: {}", front_matter.title);
+                        // eprintln!("description: {:?}", front_matter.description);
+                        // eprintln!("featured_image_url: {:?}", front_matter.featured_image_url);
+                        // eprintln!("author: {:?}", front_matter.author);
+
+                        let chapter_url = chapter.source_path.as_ref().map_or_else(
+                            || base_url.to_string(),
+                            |path| {
+                                let mut path_str = path.display().to_string();
+                                // Replace `.md` with `.html`
+                                path_str = path_str.replace(".md", ".html");
+                                format!("{}/{}", base_url, path_str)
+                            }
+                        );
+
+                        // Construct meta tags string
+                        let meta_tags = format!(
+                            "<meta property=\"og:title\" content=\"{}\" />\n\
+                             <meta property=\"og:image\" content=\"{}\" />\n\
+                             <meta property=\"og:url\" content=\"{}\" />\n\
+                             <meta property=\"og:description\" content=\"{}\" />\n\
+                             <meta name=\"author\" content=\"{}\" />",
+                            front_matter.title,
+                            front_matter.featured_image_url,
+                            &chapter_url,
+                            front_matter.description,
+                            front_matter.author
+                        );
+                        // Example of injecting directly into the chapter content
+                        // This is a simplistic approach and might not be suitable for your actual requirements
+                        chapter.content = format!("{}\n{}", meta_tags, chapter.content);
                     }
                 }
                 chapter.content = parsed.content; // Update the content minus the front matter
+                }
             }
         });
 
@@ -50,8 +88,11 @@ impl Preprocessor for FrontMatterPreprocessor {
     }
 }
 
+
 #[derive(Deserialize, Debug)]
 struct FrontMatter {
     title: String,
-    tags: Vec<String>,
+    description: String,
+    featured_image_url: String,
+    author: String,
 }

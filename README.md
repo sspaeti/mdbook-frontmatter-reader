@@ -11,8 +11,7 @@ In your chapter at the beginning of each markdown file, you can add a frontmatte
 title: "Introduction to the Field of Data Engineering"
 description: "Explore the transition from early data warehousing to today's advanced cloud computing, AI hype, and modern data stacks in data engineering. This chapter provides a concise overview of the field's evolution, key advancements, and current challenges, along with practical strategies for navigating the complex landscape, crafted by an industry pioneer for data engineers at all levels."
 featured-image-url: "https://www.dedp.online/static/og-image.png"
-canonicalUrl: "https://www.dedp.online"
-canonicalUrl: "Simon"
+author: "Simon"
 ---
 
 # Title 
