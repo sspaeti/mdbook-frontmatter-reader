@@ -1,0 +1,17 @@
+[package]
+name = "mdbook-frontmatter-reader"
+version = "0.1.0"
+edition = "2021"
+
+# [[bin]]
+# name = "mdbook-frontmatter-reader"
+# path = "src/main.rs"
+
+[dependencies]
+gray_matter = "0.2"
+mdbook = "0.4.37"  # Use the version compatible with your mdBook installation
+serde = { version = "1.0.164", features = ["derive"] }
+serde_json = "1.0.96"
+anyhow = "1.0"
+clap = "3.1.6"
+semver = "1.0"
